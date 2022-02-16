@@ -59,15 +59,15 @@ class Command(BaseCommand):
                 chat.save()
             else:
                 chat = Chat.objects.first()
-                while True:
-                    response = initialte_chat(chat.id, chat.token)
-                    if response.get('state') == 'got qr code':
-                        qr_code = response.get('qrCode')
-                        save_qr(qr_code)
+            while True:
+                response = initialte_chat(chat.id, chat.token)
+                if response.get('state') == 'got qr code':
+                    qr_code = response.get('qrCode')
+                    save_qr(qr_code)
+                    
+                if response.get('state') == 'CONNECTED':
+                    send_message(chat.id, chat.token)
                         
-                    if response.get('state') == 'CONNECTED':
-                        send_message(chat.id, chat.token)
-                            
-                    time.sleep(60)
+                time.sleep(60)
         except Exception as e:
             print(e)
